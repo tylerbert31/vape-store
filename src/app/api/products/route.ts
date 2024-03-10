@@ -4,7 +4,7 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const sort = searchParams.get("sort") ?? "0";
 
-  let sortConditions: {}[] = [];
+  let sortConditions: {}[] = [{}];
 
   if (Boolean(parseInt(sort))) {
     switch (parseInt(sort)) {
