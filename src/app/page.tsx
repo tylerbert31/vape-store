@@ -1,4 +1,5 @@
 "use client";
+import { unstable_noStore as noStore } from "next/cache";
 import { useState, useEffect, Suspense } from "react";
 import Navbar from "./_components/navbar";
 import Filter from "./_components/filter";
@@ -25,6 +26,7 @@ export type TFilter = {
 };
 
 export default function Home() {
+  noStore();
   const [products, setProducts] = useState([]);
   const [sortFilter, setsortFilter] = useState<number>(0);
   const [brand, filterBrand] = useState<number>(0);
