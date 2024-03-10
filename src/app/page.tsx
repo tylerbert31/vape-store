@@ -1,6 +1,7 @@
 "use client";
 import { unstable_noStore as noStore } from "next/cache";
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Navbar from "./_components/navbar";
 import Filter from "./_components/filter";
 import ProductCard, { ProductLoadingCard } from "./_components/product_card";
@@ -21,28 +22,34 @@ export type Product = {
 export type TFilter = {
   sortFilter: number;
   setsortFilter: (value: number) => void;
-  brand: number;
-  filterBrand: (value: number) => void;
+  rating: number;
+  filterRating: (value: number) => void;
 };
 
 export default function Home() {
   noStore();
+  const router = useRouter();
   const [products, setProducts] = useState([]);
   const [sortFilter, setsortFilter] = useState<number>(0);
-  const [brand, filterBrand] = useState<number>(0);
+  const [rating, filterRating] = useState<number>(0);
 
   const filter: TFilter = {
     sortFilter,
     setsortFilter,
-    brand,
-    filterBrand,
+    rating,
+    filterRating,
   };
 
   useEffect(() => {
-    fetch(`/api/products?sort=${sortFilter}&brand=${brand}`)
+    fetch(`/api/products?sort=${sortFilter}&rating=${rating}`)
       .then((res) => res.json())
       .then((data) => setProducts(data.products));
-  }, [sortFilter, brand]);
+    // console.log("re-rendered");
+    if (Boolean(sortFilter)) {
+      const newUrl = `/?sort=${sortFilter}&rating=${rating}`;
+      router.push(newUrl);
+    }
+  }, [sortFilter, rating]);
 
   return (
     <main className="p-0 m-0 flex flex-col items-center bg-base-300">

@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import { TFilter } from "../page";
 
 export default function Filter({ filter }: { filter: TFilter }) {
-  const { sortFilter, setsortFilter, brand, filterBrand } = filter;
+  const { sortFilter, setsortFilter, rating, filterRating } = filter;
   return (
     <div className="join max-w-full flex flex-row justify-center m-5">
       <select
@@ -21,8 +21,8 @@ export default function Filter({ filter }: { filter: TFilter }) {
       </select>
       <select
         className="select select-bordered join-item"
-        value={brand}
-        onChange={(e) => filterBrand(parseInt(e.target.value))}
+        value={rating}
+        onChange={(e) => filterRating(parseInt(e.target.value))}
       >
         <option value={0}>Rating</option>
         <option value={1}>⭐</option>
