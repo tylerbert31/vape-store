@@ -2,7 +2,7 @@ import React from "react";
 import { TFilter } from "../page";
 
 export default function Filter({ filter }: { filter: TFilter }) {
-  const { sortFilter, setsortFilter, brand, filterRating } = filter;
+  const { sortFilter, setsortFilter, rating, filterRating } = filter;
   return (
     <div className="join max-w-full flex flex-row justify-center m-5">
       <select
