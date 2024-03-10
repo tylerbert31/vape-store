@@ -21,7 +21,7 @@ export default function Filter({ filter }: { filter: TFilter }) {
       </select>
       <select
         className="select select-bordered join-item"
-        value={brand}
+        value={rating}
         onChange={(e) => filterRating(parseInt(e.target.value))}
       >
         <option value={0}>Rating</option>
