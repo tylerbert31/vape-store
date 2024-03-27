@@ -1,12 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useLayoutEffect } from "react";
+import { useSearchParams } from "next/navigation";
 
 export default function Navbar() {
   const [search, setSearch] = useState("");
+  const use_search_params = useSearchParams();
+  const searchParams = new URLSearchParams(use_search_params.toString());
 
   const handleSearch = (e) => {
     e.preventDefault();
     window.location.href =`/?search=${search}`;
   };
+
+  useLayoutEffect(() => {
+    const searchQuery = searchParams.get("search");
+    setSearch(searchQuery);
+  }, []);
 
   return (
     <div className="navbar bg-base-100">
@@ -26,6 +34,7 @@ export default function Navbar() {
                 onChange={(e) => setSearch(e.target.value)}
                 maxLength={50}
                 minLength={3}
+                value={search}
               />
             </form>
           </div>
