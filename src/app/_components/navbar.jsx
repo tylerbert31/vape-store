@@ -1,22 +1,19 @@
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
+
 export default function Navbar() {
   const [search, setSearch] = useState("");
-  const router = useRouter();
 
   const handleSearch = (e) => {
     e.preventDefault();
-    const newUrl = `?search=${search}`; // Construct new URL with query parameter
-    router.push(newUrl, newUrl, { shallow: true });
+    window.location.href =`/?search=${search}`;
   };
 
   return (
     <div className="navbar bg-base-100">
       <div className="flex-1">
-        <Link href="/" className="btn btn-ghost text-xl">
+        <a href="/" className="btn btn-ghost text-xl">
           WTFog‍ 💨
-        </Link>
+        </a>
       </div>
       <div className="flex-none">
         <div className="dropdown dropdown-end">
@@ -88,6 +85,9 @@ export default function Navbar() {
             </li>
             <li>
               <a className="justify-between">Orders</a>
+            </li>
+            <li>
+              <a className="justify-between">Admin</a>
             </li>
           </ul>
         </div>

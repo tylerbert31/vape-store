@@ -1,7 +1,7 @@
 "use client";
 import { unstable_noStore as noStore } from "next/cache";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Navbar from "./_components/navbar";
 import Filter from "./_components/filter";
 import ProductCard, { ProductLoadingCard } from "./_components/product_card";
@@ -29,9 +29,12 @@ export type TFilter = {
 export default function Home() {
   noStore();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [products, setProducts] = useState([]);
   const [sortFilter, setsortFilter] = useState<number>(0);
   const [rating, filterRating] = useState<number>(0);
+  const queryParams = new URLSearchParams(searchParams.toString());
+  const search = queryParams.get("search");
 
   const filter: TFilter = {
     sortFilter,
@@ -41,14 +44,24 @@ export default function Home() {
   };
 
   useEffect(() => {
-    fetch(`/api/products?sort=${sortFilter}&rating=${rating}`)
-      .then((res) => res.json())
-      .then((data) => setProducts(data.products));
-    // console.log("re-rendered");
     if (Boolean(sortFilter)) {
-      const newUrl = `/?sort=${sortFilter}&rating=${rating}`;
-      router.push(newUrl);
+      queryParams.set("sort", sortFilter.toString());
+      queryParams.set("rating", rating.toString());
+      if (search) {
+        queryParams.set("search", search);
+      }
     }
+
+    fetch(`/api/products?${queryParams.toString()}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setProducts(data.products)
+        if(data.products.length == 0) {
+          console.log("No products found")
+        }
+      });
+
+      router.push(`?${queryParams.toString()}`);
   }, [sortFilter, rating]);
 
   return (
@@ -60,7 +73,7 @@ export default function Home() {
           {products?.map((product: Product) => (
             <ProductCard key={product.id} product={product} />
           ))}
-          {!products.length &&
+          {!products.length && 
             Array.from({ length: 6 }).map((_, i) => (
               <ProductLoadingCard key={i} />
             ))}

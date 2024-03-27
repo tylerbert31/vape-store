@@ -1,17 +1,15 @@
 import prisma from "../../../../lib/prisma";
-import NodeCache from 'node-cache';
-
-const memcache = new NodeCache({ stdTTL: 600, checkperiod: 120});
+import memcache from "@/app/lib/node-cache";
 
 export async function GET(request: Request) {
   const { searchParams, search } = new URL(request.url);
   const sort = searchParams.get("sort") ?? "0";
+  const textSearch = searchParams.get("search") ?? "";
 
   let sortConditions: {}[] = [];
   const cachedData = memcache.get(search);
 
   if(cachedData) {
-    console.log("Cache hit - " + search)
     return Response.json(cachedData);
   }
 
@@ -46,6 +44,12 @@ export async function GET(request: Request) {
       description: true,
       image: true,
       size: true,
+    },
+    where: {
+      name: {
+        contains: textSearch,
+        mode: 'insensitive',
+      },
     },
   });
   memcache.set(search, {products}, 600);
